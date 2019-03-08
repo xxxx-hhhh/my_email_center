@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>在库任务</h1>
+    </div>
+    <div class="missions-tabs">
+        <ul class="nav nav-tabs">
+            <li {% if type!="email_mission"  %} class="active"{% endif %}><a href="{{ url_for('api.index', type='script_mission', page=page) }}">脚本任务</a></li>
+            <li {% if type=="email_mission" %} class="active" {% endif %}><a href="{{ url_for('api.index', type='email_mission', page=page) }}">邮件任务</a></li>
+        </ul>
+        <div class="control">
+            <a href="{{ url_for('api.create_mission', type=type)}}">创建新任务</a>
+        </div>
+        {% include '_missions.html' %}
+    </div>
+    {% if pagination and pagination.total > 0 %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, 'api.index', page=page, type=type) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% include 'mission_status.js' %}
+{% endblock %}

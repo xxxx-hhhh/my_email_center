@@ -1,0 +1,55 @@
+<table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="limit_length">任务编号</th>
+                <th class="limit_length">任务名称</th>
+                {% if type == 'email_mission' %}
+                    <th class="limit_length">待发送文件名前缀</th>
+                {% else %}
+                    <th class="limit_length">对应脚本</th>
+                {% endif %}
+                <th class="limit_length">收信人</th>
+                <th class="limit_length">执行频率</th>
+                <th class="limit_length">是否生效</th>
+                <th class="limit_length">创建人</th>
+                <th class="limit_length">创建时间</th>
+                <th class="limit_length">上次执行时间</th>
+                <th class="limit_length">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for mission in missions %}
+            <tr>
+                <td>{{ mission.comment }}</td>
+                <td class="omit" title="{{mission.name}}">{{ mission.name }}</td>
+                {% if type == 'email_mission' %}
+                    <td class="omit" title="{{mission.filename_prefix}}">{{ mission.filename_prefix }}</td>
+                {% else %}
+                    <td class="omit" title="{{mission.filename}}">{{ mission.filename }}</td>
+                {% endif %}
+                <td class="omit" title="{{mission.recipient}}">{{ mission.recipient }}</td>
+                <td class="limit_length">{{ mission.crond }}</td>
+                <td class="limit_length">{{ mission.valid }}</td>
+                <td class="limit_length">{{ mission.user.name if mission.user else None }}</td>
+                <td class="limit_length">{{ mission.create_time.strftime('%Y-%m-%d %H:%M:%S') if mission.create_time else None}}</td>
+                <td class="limit_length" id="{{ mission.comment }}">
+                    <img src="{{ url_for('static', filename='loading.gif') }}" class="running" style="display: none;"/>
+                    <p>{{ mission.update_time.strftime('%Y-%m-%d %H:%M:%S') if mission.update_time else None}}</p>
+                </td>
+                <td class="limit_length">
+                    <a href="{{ url_for('api.modify_mission', comment=mission.comment, type=type, page=page) }}">修改</a>
+                    {% if not mission.valid %}
+                    <a href="{{ url_for('api.resume_mission', comment=mission.comment, type=type, page=page) }}">启动</a>
+                    {% else %}
+                    <a href="{{ url_for('api.pause_mission', comment=mission.comment, type=type, page=page) }}">停止</a>
+                    {% endif %}
+                    <a href="{{ url_for('api.mission_logs', comment=mission.comment, type=type) }}">日志</a>
+                    <a href="{{ url_for('api.execute_mission', comment=mission.comment, type=type, page=page) }}">执行</a>
+                    <a href="javascript:;" onclick="if(confirm('此操作会删除任务相关的所有报表文件和日志记录, 确定删除吗')){location.href='{{ url_for('api.remove_mission', comment=mission.comment, type=type, page=page) }}';}" class="attention">
+                        删除
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>

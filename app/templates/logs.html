@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block caption %}
+    <a class="navbar-brand" href="{{ url_for('api.index', type=type) }}">Email Center</a>
+{% endblock %}
+
+
+{% block page_content %}
+    <div>
+        <div class="page-header">
+            <h1>任务编号 : {{ comment }}</h1>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>日志ID</th>
+                    {% if type=='email_mission' %}
+                        <th>触发时间</th>
+                    {% else %}
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                    {% endif %}
+                    <th>日志</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.id }}</td>
+                    {% if type=='email_mission' %}
+                        <td>{{ log.end_time }}</td>
+                    {% else %}
+                        <td>{{ log.start_time }}</td>
+                        <td>{{ log.end_time }}</td>
+                    {% endif %}
+                    <td>
+                      <p data-toggle="modal" data-target="#log{{ log.id }}" style="cursor:pointer;">{{ log.content }}</p>
+                      <div class="modal fade" id="log{{ log.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <textarea class="log-modal" disabled="disabled">{{ log.content }}</textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" style="float:right;">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if pagination and pagination.total > 0 %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, 'api.mission_logs', page=page, type=type, comment=comment) }}
+        </div>
+    {% endif %}
+{% endblock %}

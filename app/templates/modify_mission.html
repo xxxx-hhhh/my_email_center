@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>任务修改</h1>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>任务编号</th>
+                    <th>任务名称</th>
+                    {% if mission.type == 'email_mission' %}
+                        <th>待发送文件名前缀</th>
+                    {% else %}
+                        <th>对应脚本</th>
+                    {% endif %}
+                    <th>收信人</th>
+                    <th>邮件标题</th>
+                    <th>执行频率</th>
+                    <th>创建人</th>
+                    <th>创建时间</th>
+                </tr>
+                <tr>
+                    <td>{{ mission.comment }}</td>
+                    <td>{{ mission.name }}</td>
+                    {% if mission.type == 'email_mission' %}
+                        <td>{{ mission.filename_prefix }}</td>
+                    {% else %}
+                        <td>{{ mission.filename }}</td>
+                    {% endif %}
+                    <td>{{ mission.recipient }}</td>
+                    <td>{{ mission.caption }}</td>
+                    <td>{{ mission.crond }}</td>
+                    <td>{{ '%s(%s)' % (mission.user.name, mission.user.email) if mission.user else None }}</td>
+                    <td>{{ mission.create_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+    <!-- content modal -->
+    <div class="modal fade" id="content-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">自定义正文</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea  id="content-area" placeholder="输入邮件正文内容"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="custom_content()">自定义正文</button>
+                    <button type="button" class="btn btn-default" onclick="no_email()">不发送邮件</button>
+                    <button type="button" class="btn btn-default" onclick="render_html()">渲染邮件正文</button>
+                    <button type="button" class="btn btn-default" onclick="custom_render()">自定义渲染邮件正文(jinja2语法)</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="submit()">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% include 'email_content.js' %}
+{% endblock %}

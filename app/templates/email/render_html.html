@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        table.dataframe {
+            border-collapse: collapse;
+            border: 2px solid #a19da2;
+        }
+
+        table.dataframe thead {
+            border: 2px solid #91c6e1;
+            padding: 10px 10px 10px 10px;
+            color: #333333;
+        }
+
+        table.dataframe tbody {
+            border: 2px solid #91c6e1;
+            padding: 10px 10px 10px 10px;
+        }
+
+        table.dataframe tr {
+
+        }
+
+        table.dataframe th {
+            vertical-align: top;
+            font-size: 14px;
+            padding: 10px 10px 10px 10px;
+            color: #105de3;
+            font-family: arial;
+            text-align: center;
+        }
+
+        table.dataframe td {
+            text-align: center;
+            padding: 10px 10px 10px 10px;
+        }
+
+        .table_caption {
+            font-size: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        {{ content|safe }}
+    </div>
+</body>
+</html>
