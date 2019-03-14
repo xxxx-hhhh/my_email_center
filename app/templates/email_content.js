@@ -17,14 +17,15 @@ function render_html(){
 // 自定义渲染邮件正文(jinja2语法)
 var base_template = '\
 <%custom_render%>\n\
-<--! filename: 生成的文件名(不带后缀) -->\n\
-<--! tables: (sheetname, dataframe_table) 二元元组列表 -->\n\
+\{\# filename: 生成的文件名(不带后缀) \#\}\n\
+\{\# tables: (sheetname, dataframe_table) 二元元组列表 \#\}\n\
 \{\% block title \%\}\{\{ filename \}\}\{\% endblock title \%\}\n\
+\{\# 邮件正文的形式在body块中定义 \#\}\n\
 \{\% block body \%\}\n\
     <div>\n\
         \{\% for sheetname, table in  tables \%\}\n\
-        	<h2>\{\{ sheetname \}\}</h2>\n\
-        	\{\{ table \}\}\n\
+            <h2>\{\{ sheetname \}\}</h2>\n\
+            \{\{ table \}\}\n\
         \{\% endfor \%\}\n\
     </div>\n\
 \{\% endblock body \%\}\n\
