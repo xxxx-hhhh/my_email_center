@@ -90,3 +90,11 @@ p {
     height: 515px;
     border: 0px;
 }
+
+#code-500 {
+    width: 1247px;
+    height: 545px;
+    border: 0px;
+    resize: none;
+    background-color: #ffffff;
+}
